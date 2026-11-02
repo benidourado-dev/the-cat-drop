@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Cat, LogOut, Plus, Pencil, Trash2, X, ArrowLeft, Star } from "lucide-react";
+import { Cat, LogOut, Plus, Pencil, Trash2, X, ArrowLeft, Star, MousePointerClick, Trophy } from "lucide-react";
 import { toast } from "sonner";
 import { api } from "../lib/api";
 
@@ -19,6 +19,9 @@ export default function Admin() {
   const [form, setForm] = useState(emptyForm);
   const [editingId, setEditingId] = useState(null);
   const [showForm, setShowForm] = useState(false);
+
+  const totalClicks = products.reduce((sum, p) => sum + (p.clicks || 0), 0);
+  const topProducts = [...products].sort((a, b) => (b.clicks || 0) - (a.clicks || 0)).slice(0, 3);
 
   const loadProducts = () => api.get("/products").then((res) => setProducts(res.data)).catch(() => {});
 
@@ -150,6 +153,31 @@ export default function Admin() {
       </header>
 
       <main className="max-w-6xl mx-auto px-4 sm:px-6 py-10">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8" data-testid="click-stats-grid">
+          <div className="rounded-2xl bg-[#12141A] border border-white/10 p-5">
+            <div className="flex items-center gap-2 mb-1">
+              <MousePointerClick className="w-4 h-4 text-[#FF6B00]" />
+              <p className="text-[10px] font-jetbrains uppercase tracking-widest text-zinc-500">cliques totais</p>
+            </div>
+            <p className="font-display font-extrabold text-3xl text-[#FFB800]" data-testid="total-clicks-value">{totalClicks}</p>
+          </div>
+          <div className="rounded-2xl bg-[#12141A] border border-white/10 p-5 col-span-1 lg:col-span-3">
+            <div className="flex items-center gap-2 mb-3">
+              <Trophy className="w-4 h-4 text-[#FFB800]" />
+              <p className="text-[10px] font-jetbrains uppercase tracking-widest text-zinc-500">top 3 mais clicados</p>
+            </div>
+            <div className="flex flex-wrap gap-x-6 gap-y-1.5">
+              {topProducts.map((p, i) => (
+                <p key={p.id} className="text-xs text-zinc-300" data-testid={`top-product-${i}`}>
+                  <span className="text-[#FF6B00] font-jetbrains font-bold">#{i + 1}</span>{" "}
+                  {p.name.length > 34 ? p.name.slice(0, 34) + "…" : p.name}{" "}
+                  <span className="text-[#FFB800] font-bold">({p.clicks || 0})</span>
+                </p>
+              ))}
+            </div>
+          </div>
+        </div>
+
         <div className="flex items-center justify-between mb-8">
           <div>
             <h1 className="font-display font-bold text-2xl sm:text-3xl tracking-tight">Produtos</h1>
@@ -181,7 +209,7 @@ export default function Admin() {
               onChange={(e) => setForm({ ...form, price: e.target.value })} data-testid="product-price-input" className={inputCls} />
             <input required placeholder="Preço original (ex: 299.00)" value={form.original_price}
               onChange={(e) => setForm({ ...form, original_price: e.target.value })} data-testid="product-original-price-input" className={inputCls} />
-            <input required placeholder="URL da imagem" value={form.image_url}
+            <input required placeholder="URL da imagem (botão direito na foto do produto na Shopee → copiar endereço da imagem)" value={form.image_url}
               onChange={(e) => setForm({ ...form, image_url: e.target.value })} data-testid="product-image-input" className={inputCls} />
             <input required placeholder="Link de afiliado Shopee" value={form.affiliate_link}
               onChange={(e) => setForm({ ...form, affiliate_link: e.target.value })} data-testid="product-affiliate-input" className={inputCls} />
@@ -214,6 +242,9 @@ export default function Admin() {
                   {" "}<span className="line-through">{brl(p.original_price)}</span>
                 </p>
               </div>
+              <span className="hidden sm:flex items-center gap-1 text-xs font-jetbrains text-zinc-400 border border-white/10 rounded-full px-3 py-1 shrink-0" data-testid={`product-clicks-${p.id}`}>
+                <MousePointerClick className="w-3 h-3 text-[#FF6B00]" /> {p.clicks || 0}
+              </span>
               {p.featured && <Star className="w-4 h-4 text-[#FFB800] shrink-0" />}
               <button onClick={() => startEdit(p)} data-testid={`edit-product-btn-${p.id}`} aria-label="Editar"
                 className="p-2 rounded-lg border border-white/10 text-zinc-400 hover:text-[#FFB800] hover:border-[#FFB800]/40 transition-colors shrink-0">

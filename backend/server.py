@@ -96,6 +96,7 @@ class Product(BaseDocument):
     featured: bool = False
     mascot_quote: str = ""
     coupon: Optional[str] = None
+    clicks: int = 0
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
 
@@ -226,6 +227,20 @@ async def update_product(product_id: str, input: ProductCreate, user: dict = Dep
     return Product.from_mongo(doc)
 
 
+@api_router.post("/products/{product_id}/click")
+async def track_click(product_id: str):
+    result = await db.products.update_one({"_id": ObjectId(product_id)}, {"$inc": {"clicks": 1}})
+    if result.matched_count == 0:
+        raise HTTPException(status_code=404, detail="Produto não encontrado")
+    return {"message": "click tracked"}
+
+
+@api_router.get("/stats/clicks")
+async def click_stats(user: dict = Depends(get_current_user)):
+    docs = await db.products.find({}, {"name": 1, "clicks": 1, "category": 1, "price": 1}).sort("clicks", -1).to_list(1000)
+    return [{"id": str(d["_id"]), "name": d["name"], "clicks": d.get("clicks", 0), "category": d["category"], "price": d["price"]} for d in docs]
+
+
 @api_router.delete("/products/{product_id}")
 async def delete_product(product_id: str, user: dict = Depends(get_current_user)):
     result = await db.products.delete_one({"_id": ObjectId(product_id)})
@@ -287,6 +302,7 @@ async def seed_products():
 async def startup():
     await db.users.create_index("email", unique=True)
     await db.login_attempts.create_index("identifier")
+    await db.products.update_many({"clicks": {"$exists": False}}, {"$set": {"clicks": 0}})
     await seed_admin()
     await seed_products()
 

@@ -57,6 +57,11 @@ Site de afiliados da Shopee chamado **The Cat Drop**, com um gato preto ("O Gato
 - WhatsApp: 973054829 (wa.me/55973054829)
 - Pix: 152074587790
 
+## Implementado (02/11/2026 — atualização 3)
+- Contador de cliques: POST /api/products/{id}/click (público), campo clicks no produto, badge "X pessoas viram este achadinho" nos cards, GET /api/stats/clicks (admin), painel admin com total de cliques + Top 3 mais clicados + contagem por linha de produto
+- Tentativa de scraping das fotos oficiais da Shopee: BLOQUEADA (login/captcha nas APIs e páginas). Solução: placeholder do campo imagem no admin orienta a colar a URL da foto oficial (botão direito na foto na Shopee → copiar endereço da imagem)
+- Verificado: clique real no card abriu a página de afiliado na Shopee e incrementou o contador; painel exibe totais e ranking
+
 ## Backlog
 ### P0
 - Deploy: os dados do preview (20 produtos reais) serão copiados no primeiro deploy; edições posteriores no preview ficam só no preview

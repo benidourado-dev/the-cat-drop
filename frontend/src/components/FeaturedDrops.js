@@ -2,8 +2,13 @@ import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { ExternalLink, Copy, Ticket, Cat, Timer } from "lucide-react";
 import { toast } from "sonner";
+import { api } from "../lib/api";
 
 const brl = (v) => v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+
+const trackClick = (id) => {
+  api.post(`/products/${id}/click`).catch(() => {});
+};
 
 const useCountdown = () => {
   const [left, setLeft] = useState("");
@@ -80,7 +85,7 @@ export const FeaturedDrops = ({ products }) => {
                     <p className="text-xs text-zinc-300 italic leading-relaxed">"{heroDrop.mascot_quote}"</p>
                   </div>
                 )}
-                <a href={heroDrop.affiliate_link} target="_blank" rel="noopener noreferrer" data-testid="hero-drop-shopee-btn"
+                <a href={heroDrop.affiliate_link} target="_blank" rel="noopener noreferrer" onClick={() => trackClick(heroDrop.id)} data-testid="hero-drop-shopee-btn"
                   className="inline-flex items-center justify-center gap-2 rounded-full bg-[#FF6B00] hover:bg-[#FFB800] text-[#0B0C10] font-bold text-sm px-6 py-3 transition-colors w-fit">
                   Ver na Shopee <ExternalLink className="w-4 h-4" />
                 </a>
@@ -104,7 +109,7 @@ export const FeaturedDrops = ({ products }) => {
                 <span className="font-display font-extrabold text-2xl text-[#FFB800]">{brl(topPick.price)}</span>
                 <span className="text-xs text-zinc-500 line-through">{brl(topPick.original_price)}</span>
               </div>
-              <a href={topPick.affiliate_link} target="_blank" rel="noopener noreferrer" data-testid="top-pick-shopee-btn"
+              <a href={topPick.affiliate_link} target="_blank" rel="noopener noreferrer" onClick={() => trackClick(topPick.id)} data-testid="top-pick-shopee-btn"
                 className="inline-flex items-center justify-center gap-2 rounded-full border border-[#FF6B00]/50 text-[#FF6B00] hover:bg-[#FF6B00] hover:text-[#0B0C10] font-bold text-sm px-6 py-3 transition-colors">
                 Ver na Shopee <ExternalLink className="w-4 h-4" />
               </a>

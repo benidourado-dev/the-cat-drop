@@ -1,11 +1,16 @@
 import { motion } from "framer-motion";
-import { ExternalLink, Share2, Cat } from "lucide-react";
+import { ExternalLink, Share2, Cat, MousePointerClick } from "lucide-react";
 import { toast } from "sonner";
+import { api } from "../lib/api";
 
 const brl = (v) => v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 
 export const ProductCard = ({ product, index }) => {
   const discount = Math.round((1 - product.price / product.original_price) * 100);
+
+  const trackClick = () => {
+    api.post(`/products/${product.id}/click`).catch(() => {});
+  };
 
   const share = () => {
     navigator.clipboard.writeText(product.affiliate_link);
@@ -38,12 +43,18 @@ export const ProductCard = ({ product, index }) => {
         {product.mascot_quote && (
           <p className="text-xs text-zinc-500 italic mb-3 leading-relaxed">"{product.mascot_quote}"</p>
         )}
-        <div className="flex items-baseline gap-2 mb-4">
+        <div className="flex items-baseline gap-2 mb-1.5">
           <span className="font-display font-extrabold text-xl text-[#FFB800]">{brl(product.price)}</span>
           <span className="text-xs text-zinc-500 line-through">{brl(product.original_price)}</span>
         </div>
-        <div className="flex gap-2">
-          <a href={product.affiliate_link} target="_blank" rel="noopener noreferrer"
+        {product.clicks > 0 && (
+          <p data-testid={`click-count-${product.id}`} className="flex items-center gap-1 text-[11px] text-zinc-500 mb-3">
+            <MousePointerClick className="w-3 h-3 text-[#FF6B00]" />
+            <span className="font-semibold text-zinc-400">{product.clicks}</span> pessoas viram este achadinho
+          </p>
+        )}
+        <div className="flex gap-2 mt-auto">
+          <a href={product.affiliate_link} target="_blank" rel="noopener noreferrer" onClick={trackClick}
             data-testid={`shopee-affiliate-btn-${product.id}`}
             className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-full bg-[#FF6B00] hover:bg-[#FFB800] text-[#0B0C10] font-bold text-xs sm:text-sm px-4 py-2.5 transition-colors">
             Ver na Shopee <ExternalLink className="w-3.5 h-3.5" />
