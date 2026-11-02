@@ -30,21 +30,39 @@ Site de afiliados da Shopee chamado **The Cat Drop**, com um gato preto ("O Gato
 ## Implementado (02/11/2026)
 - Site completo: Header, Hero cinético com mascote, Marquee, FeaturedDrops (bento), Catalog (busca/filtros/sort), MascotSection, Footer com captura de contato (toast)
 - Painel admin com login, lista, criar/editar/excluir produtos, flag destaque, cupom, frase do gato
-- 7 produtos seed com imagens Unsplash curadas
 - Credenciais admin: admin@thecatdrop.com / catdrop2026 (teste)
+
+### Update 02/11/2026 — links reais + pagamento + contato
+- Catálogo substituído pelos 20 produtos reais do CSV de afiliado do usuário (links s.shopee.com.br), categorias: Fitness & Suplementos, Tech & Gadgets, Moda & Estilo, Casa & Cozinha, Ferramentas, Beleza & Cuidados
+- 3 produtos em destaque (Whey+Creatina, Power Bank, Creatina 300g) com cupom GATO10
+- Nova seção "Formas de Pagamento": Pix (chave oficial 152074587790 com botão copiar), Cartão de Débito, Cartão de Crédito, Boleto & ShopeePay, cada um com passo a passo
+- Footer com contatos reais: benidourado@gmail.com e WhatsApp (97) 3054-829 (wa.me/55973054829)
+- Novas categorias adicionadas ao select do painel admin
+- Verificado: 20 produtos na API, nenhuma imagem quebrada, layout 375/1366 OK
 
 ## Verificado
 - GET /api/products (7 itens), login, /auth/me, criar produto autenticado, 401 sem auth
 - Fluxo UI admin: login → adicionar produto → aparece na lista e na home → removido após teste
 - Layout em 375 / 768 / 1366 px
 
+## Implementado (02/11/2026 — atualização 2)
+- 20 produtos reais do CSV de afiliado do usuário (links s.shopee.com.br, comissões reais), categorizados (Fitness, Tech, Moda, Casa, Ferramentas, Beleza) com imagens Unsplash verificadas
+- Seção "Formas de Pagamento": Pix (chave 152074587790 com botão copiar), Débito, Crédito, Boleto & ShopeePay, com passo a passo
+- Rodapé com contatos do lojista: benidourado@gmail.com e WhatsApp (97) 3054-829 (wa.me/55973054829)
+- Nav atualizada com âncora Pagamento
+- Verificado: 0 imagens quebradas, catálogo e pagamento em 1366px e 375px
+
+## Contatos do lojista (referência)
+- E-mail: benidourado@gmail.com
+- WhatsApp: 973054829 (wa.me/55973054829)
+- Pix: 152074587790
+
 ## Backlog
 ### P0
-- Lojista colar links de afiliado reais da Shopee (site já pronto para receber)
+- Deploy: os dados do preview (20 produtos reais) serão copiados no primeiro deploy; edições posteriores no preview ficam só no preview
 
 ### P1
-- Mais produtos nas categorias Pets / Achadinhos até R$50
-- Newsletter/WhatsApp real (hoje é só toast de confirmação — MOCKED)
+- Newsletter/WhatsApp real (hoje o rodapé tem links de contato direto)
 - Troca de senha pelo próprio admin no painel
 
 ### P2

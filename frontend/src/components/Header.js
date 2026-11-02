@@ -5,6 +5,7 @@ import { Cat, Menu, X, ShieldCheck, BadgeCheck } from "lucide-react";
 const NAV_LINKS = [
   { label: "Drops do Dia", href: "#drops" },
   { label: "Catálogo", href: "#catalogo" },
+  { label: "Pagamento", href: "#pagamento" },
   { label: "O Gato", href: "#o-gato" },
 ];
 

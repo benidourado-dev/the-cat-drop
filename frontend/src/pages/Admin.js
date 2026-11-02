@@ -173,7 +173,7 @@ export default function Admin() {
               onChange={(e) => setForm({ ...form, name: e.target.value })} data-testid="product-name-input" className={inputCls} />
             <select value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })}
               data-testid="product-category-select" className={inputCls}>
-              {["Tech & Gadgets", "Casa & Cozinha", "Moda & Estilo", "Pets", "Outros"].map((c) => (
+              {["Tech & Gadgets", "Casa & Cozinha", "Moda & Estilo", "Fitness & Suplementos", "Ferramentas", "Beleza & Cuidados", "Pets", "Outros"].map((c) => (
                 <option key={c} value={c}>{c}</option>
               ))}
             </select>

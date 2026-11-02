@@ -4,6 +4,7 @@ import { Hero } from "../components/Hero";
 import { Marquee } from "../components/Marquee";
 import { FeaturedDrops } from "../components/FeaturedDrops";
 import { Catalog } from "../components/Catalog";
+import { PaymentSection } from "../components/PaymentSection";
 import { MascotSection } from "../components/MascotSection";
 import { Footer } from "../components/Footer";
 import { api } from "../lib/api";
@@ -35,6 +36,7 @@ export default function Home() {
             <Catalog products={products} />
           </>
         )}
+        <PaymentSection />
         <MascotSection />
       </main>
       <Footer />
