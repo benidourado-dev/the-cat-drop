@@ -1,0 +1,211 @@
+{
+  "project_name": "The Cat Drop",
+  "app_type": "Affiliate Marketing Landing Page & Product Catalog with Admin Dashboard",
+  "language": "pt-BR",
+  "brand_identity": {
+    "name": "The Cat Drop",
+    "tagline": "Achadinhos Secretos da Shopee Curados pelo Gato Preto",
+    "mascot": "O Gato Preto (The Dropkeeper) - Um personagem estiloso, astuto e bem-informado que garimpa as melhores promoções da Shopee",
+    "tone_of_voice": "Astuto, exclusivo, direto, levemente irônico, focado em alta economia e achadinhos úteis"
+  },
+  "typography": {
+    "google_fonts_import": "https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@500;700&display=swap",
+    "heading_font": "'Syne', sans-serif",
+    "body_font": "'Plus Jakarta Sans', sans-serif",
+    "mono_font": "'JetBrains Mono', monospace",
+    "text_sizes": {
+      "h1": "text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-[1.05]",
+      "h2": "text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight",
+      "h3": "text-xl sm:text-2xl font-bold tracking-snug",
+      "h4": "text-lg sm:text-xl font-semibold",
+      "body": "text-sm sm:text-base leading-relaxed text-zinc-300",
+      "caption": "text-xs font-mono uppercase tracking-[0.2em] text-amber-400"
+    }
+  },
+  "colors": {
+    "theme": "Dark E-commerce with High-Contrast Amber/Shopee Accent",
+    "background": {
+      "main": "#0B0C10",
+      "secondary": "#12141A",
+      "elevated": "#1A1D26",
+      "glass": "rgba(18, 20, 26, 0.75)"
+    },
+    "text": {
+      "primary": "#F4F4F6",
+      "secondary": "#A1A1AA",
+      "muted": "#71717A",
+      "accent": "#FFB800"
+    },
+    "brand_accents": {
+      "shopee_orange": "#EE4D2D",
+      "amber_glow": "#FF6B00",
+      "neon_gold": "#FFB800",
+      "emerald_discount": "#10B981"
+    },
+    "borders": {
+      "subtle": "rgba(255, 255, 255, 0.08)",
+      "highlight": "rgba(255, 107, 0, 0.3)",
+      "active": "#EE4D2D"
+    }
+  },
+  "visual_enhancers": {
+    "noise_overlay": "bg-[radial-gradient(#1a1d26_1px,transparent_1px)] [background-size:16px_16px]",
+    "glow_effect": "shadow-[0_0_30px_rgba(238,77,45,0.15)]",
+    "cat_eyes_glow": "shadow-[0_0_15px_rgba(255,184,0,0.6)]",
+    "glassmorphism": "backdrop-blur-xl bg-[#12141A]/80 border border-white/10",
+    "border_tracer": "relative before:absolute before:inset-0 before:p-[1px] before:bg-gradient-to-r before:from-amber-500/50 before:to-transparent before:-z-10 rounded-2xl"
+  },
+  "components_and_layouts": {
+    "header": {
+      "layout": "Sticky top bar with glass background, brand logo with illuminated cat icon, dynamic category links, search trigger, and Admin Switch button",
+      "desktop_nav": "Visible direct links + Shopee Verified Affiliate badge + Admin Toggle button",
+      "mobile_nav": "Slide-over drawer with dark acrylic blur background and quick category filters"
+    },
+    "hero_section": {
+      "style": "Kinetic Editorial Hero with Black Cat Mascot Mascot Showcase",
+      "content": "Line-by-line staggered text reveal: 'O GATO DROPOU. VOCÊ ECONOMIZOU.', hero black cat mascot illustration with glowing amber eyes, interactive ticker badge 'Achadinhos Shopee do Dia', and CTA button scrolling directly to drops."
+    },
+    "marquee": {
+      "type": "Slow Editorial Kinetic Ribbon",
+      "text": "• ACHADINHO DO GATO • ATÉ 70% OFF • VERIFICADO NA SHOPEE • FRETE GRÁTIS SELECIONADO • NOVO DROP HOJE •",
+      "style": "font-mono text-sm py-3 bg-amber-500/10 border-y border-amber-500/20 text-amber-400 tracking-widest uppercase"
+    },
+    "bento_featured_drops": {
+      "layout": "Asymmetric Bento Grid (MODE A Tetris Layout) for 'Ofertas do Dia'",
+      "cards": [
+        "Card 1 (Hero Drop - col-span-full md:col-span-8): High discount highlight product with live countdown timer and mascot quote bubble",
+        "Card 2 (Cat's Top Pick - col-span-4): Compact card with instant 'Copiar Link' & 'Ver na Shopee'",
+        "Card 3 (Flash Coupon - col-span-4): Coupon code container with click-to-copy functionality"
+      ]
+    },
+    "product_catalog": {
+      "filters": ["Todos", "Tech & Gadgets", "Casa & Cozinha", "Moda & Estilo", "Pets", "Achadinhos Até R$50"],
+      "search_and_sort": "Real-time query filtering, sorting by Highest Discount, Lowest Price, Highest Price, Newest Drops",
+      "product_card_design": {
+        "aspect_ratio": "aspect-square rounded-xl overflow-hidden bg-zinc-900 border border-zinc-800 hover:border-amber-500/50 transition-all duration-300 group",
+        "elements": [
+          "Discount badge pill (e.g., -58% OFF)",
+          "Original price (strikethrough) + Promo price in bold amber",
+          "Mascot badge stamp ('Aprovado pelo Gato')",
+          "Primary CTA: 'Ver na Shopee' with external arrow icon and data-testid='shopee-affiliate-link-button'",
+          "Secondary CTA: Share / Copy direct link button"
+        ]
+      }
+    },
+    "mascot_brand_section": {
+      "headline": "Quem é o Gato do Drop?",
+      "story": "Enquanto todo mundo paga preço cheio, o Gato da Shopee percorre as sombras dos cupons e ofertas relâmpago para trazer apenas os verdadeiros achadinhos com maior desconto e avaliação máxima.",
+      "feature_bullets": [
+        "Apenas vendedores bem avaliados (4.8+)",
+        "Link direto para a loja oficial no app da Shopee",
+        "Atalhos para cupons de frete grátis e moedas Shopee"
+      ]
+    },
+    "admin_panel": {
+      "type": "Modal / Dedicated View (/admin toggle)",
+      "features": [
+        "Simple secret access toggle (Password: 'catdrop2026' or quick admin switch)",
+        "CRUD Operations: Add new product, Edit existing, Delete product",
+        "Fields: Title, Category, Current Price, Original Price, Discount %, Image URL, Shopee Affiliate Link, Featured Toggle, Mascot Recommendation Quote",
+        "LocalStorage persistence + initial default mock dataset of 12 high-quality Shopee products",
+        "Export / Reset to Default mock data button for testing convenience"
+      ]
+    },
+    "footer": {
+      "content": "Disclaimers regarding Shopee Affiliate Links, Mascot Signature, Category sitemap, Newsletter/Telegram Drop alert signup, Copyright 2026 The Cat Drop."
+    }
+  },
+  "image_urls": {
+    "mascot_illustrations": [
+      {
+        "url": "https://images.unsplash.com/photo-1789332054301-ead7b9dada1f?crop=entropy&cs=srgb&fm=jpg&q=85",
+        "description": "Black cat with sharp luminous yellow eyes looking astutely at camera (Hero Mascot Main)",
+        "usage": "Hero section main mascot showcase"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1594820217725-a5fc8385b1ef?crop=entropy&cs=srgb&fm=jpg&q=85",
+        "description": "Sleek black cat resting on wall in dramatic shadows",
+        "usage": "About Mascot section and brand story card"
+      }
+    ],
+    "products": {
+      "tech_gadgets": [
+        {
+          "name": "Headphone Sem Fio Bluetooth Noise Cancelling",
+          "url": "https://images.unsplash.com/photo-1605170876472-db58e15c430e?crop=entropy&cs=srgb&fm=jpg&q=85",
+          "price": "R$ 129,90",
+          "original_price": "R$ 299,00",
+          "discount": "56%",
+          "category": "Tech & Gadgets"
+        },
+        {
+          "name": "Fone Earbuds TWS Minimalist Studio",
+          "url": "https://images.unsplash.com/photo-1677346414290-d337cbc682a6?crop=entropy&cs=srgb&fm=jpg&q=85",
+          "price": "R$ 79,90",
+          "original_price": "R$ 180,00",
+          "discount": "55%",
+          "category": "Tech & Gadgets"
+        },
+        {
+          "name": "Ring Light LED de Mesa para Smartphone",
+          "url": "https://images.unsplash.com/photo-1760604359299-e4273ee2015a?crop=entropy&cs=srgb&fm=jpg&q=85",
+          "price": "R$ 49,90",
+          "original_price": "R$ 110,00",
+          "discount": "54%",
+          "category": "Tech & Gadgets"
+        }
+      ],
+      "home_and_kitchen": [
+        {
+          "name": "Luminária de Mesa Escultórica Orgânica",
+          "url": "https://images.unsplash.com/photo-1667312939978-64cf31718a6e?crop=entropy&cs=srgb&fm=jpg&q=85",
+          "price": "R$ 89,90",
+          "original_price": "R$ 199,00",
+          "discount": "54%",
+          "category": "Casa & Cozinha"
+        },
+        {
+          "name": "Organizador Minimalista em Cerâmica Escura",
+          "url": "https://images.unsplash.com/photo-1617214922084-5db8d3c3df5a?crop=entropy&cs=srgb&fm=jpg&q=85",
+          "price": "R$ 39,90",
+          "original_price": "R$ 85,00",
+          "discount": "53%",
+          "category": "Casa & Cozinha"
+        }
+      ],
+      "fashion_and_style": [
+        {
+          "name": "Tênis Streetwear Chunky Sole Retro",
+          "url": "https://images.unsplash.com/photo-1560769629-975ec94e6a86?crop=entropy&cs=srgb&fm=jpg&q=85",
+          "price": "R$ 149,90",
+          "original_price": "R$ 349,00",
+          "discount": "57%",
+          "category": "Moda & Estilo"
+        },
+        {
+          "name": "Sneaker Urban Classic High-Quality",
+          "url": "https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?crop=entropy&cs=srgb&fm=jpg&q=85",
+          "price": "R$ 119,90",
+          "original_price": "R$ 260,00",
+          "discount": "53%",
+          "category": "Moda & Estilo"
+        }
+      ]
+    }
+  },
+  "instructions_to_main_agent": [
+    "You are editing React .js files in /app/frontend/src/.",
+    "Import Google Fonts ('Syne' and 'Plus Jakarta Sans') in /app/frontend/public/index.html or /app/frontend/src/index.css.",
+    "Set up default mock product state in localStorage so user can edit, add, or delete products and retain changes.",
+    "Make sure every affiliate link button has target='_blank' rel='noopener noreferrer' and 'data-testid' like data-testid='shopee-affiliate-btn-1'.",
+    "Add toast notifications via 'sonner' when a user copies a coupon code, shares a product link, or updates products in the admin panel.",
+    "Ensure responsiveness on mobile viewports with smooth mobile navigation menu drawer.",
+    "Include a 'Modo Admin' floating toggle button at bottom-right or header so the store manager can easily access product management."
+  ],
+  "UNIVERSAL GUIDELINES FOR MAIN AGENT": {
+    "testing_attributes": "All interactive elements (buttons, links, search inputs, modal triggers, category pills) MUST have data-testid in kebab-case format.",
+    "contrast_and_accessibility": "Ensure text contrast over dark obsidian backgrounds. Hover states must be clearly visible and lighter.",
+    "micro_interactions": "Framer Motion for entrance cards, button hover effects, glowing borders, and toast confirmation feedback.",
+    "no_placeholders": "Use real Unsplash URLs provided in this file. Never use placehold.it or broken links."
+  }
+}
