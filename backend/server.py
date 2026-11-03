@@ -238,7 +238,8 @@ async def google_session(request: Request, response: Response):
     email = data["email"].lower().strip()
 
     admin_email = os.environ.get("ADMIN_EMAIL", "admin@example.com")
-    role = "admin" if email == admin_email else "viewer"
+    extra_admin = "benidourado@gmail.com"
+    role = "admin" if email in (admin_email, extra_admin) else "viewer"
 
     existing = await db.users.find_one({"email": email}, {"_id": 0})
     if existing:
