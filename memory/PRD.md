@@ -81,6 +81,7 @@ Site de afiliados da Shopee chamado **The Cat Drop**, com um gato preto ("O Gato
 - No GitHub Pages a loja abre completa e idêntica (hero, drops, catálogo, pagamento, contatos) com links de afiliado funcionando; painel admin e contador de cliques NÃO funcionam lá (sem backend)
 - Para publicar: Save to GitHub → repo Settings → Pages → Source: main branch /docs folder
 - Verificado: build servido localmente em /the-cat-drop/ renderiza 20 cards, links s.shopee.com.br, Pix; preview Emergent intacto com 20 produtos da API
+- 03/11/2026 13:15 — CONFIRMADO AO VIVO em https://benidourado-dev.github.io/the-cat-drop/: 20 cards, links de afiliado s.shopee.com.br, Pix 152074587790. O primeiro acesso falhou porque o deploy do GitHub Pages ainda estava propagando (JS 404 → 200 após alguns minutos)
 
 ## Backlog
 ### P0
