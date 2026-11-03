@@ -1,9 +1,11 @@
 import "@/App.css";
-import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { BrowserRouter, HashRouter, Routes, Route, useLocation } from "react-router-dom";
 import { Toaster } from "sonner";
 import Home from "./pages/Home";
 import Admin from "./pages/Admin";
 import AuthCallback from "./pages/AuthCallback";
+
+const Router = process.env.PUBLIC_URL ? HashRouter : BrowserRouter;
 
 function AppRouter() {
   const location = useLocation();
@@ -21,9 +23,9 @@ function AppRouter() {
 function App() {
   return (
     <div className="App min-h-screen bg-[#0B0C10]">
-      <BrowserRouter>
+      <Router>
         <AppRouter />
-      </BrowserRouter>
+      </Router>
       <Toaster theme="dark" richColors position="bottom-right" />
     </div>
   );

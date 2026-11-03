@@ -8,6 +8,7 @@ import { PaymentSection } from "../components/PaymentSection";
 import { MascotSection } from "../components/MascotSection";
 import { Footer } from "../components/Footer";
 import { api } from "../lib/api";
+import { FALLBACK_PRODUCTS } from "../data/productsFallback";
 
 export default function Home() {
   const [products, setProducts] = useState([]);
@@ -16,7 +17,7 @@ export default function Home() {
   useEffect(() => {
     api.get("/products")
       .then((res) => setProducts(res.data))
-      .catch(() => setProducts([]))
+      .catch(() => setProducts(FALLBACK_PRODUCTS))
       .finally(() => setLoading(false));
   }, []);
 

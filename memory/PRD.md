@@ -75,6 +75,13 @@ Site de afiliados da Shopee chamado **The Cat Drop**, com um gato preto ("O Gato
 - Login por senha continua funcionando em paralelo
 - Verificado: JWT login/me OK, sessão Google simulada retorna user, botão renderiza, logout limpa sessão
 
+## Implementado (03/11/2026 — atualização 6)
+- GitHub Pages: criada pasta /app/docs com build estático (PUBLIC_URL=/the-cat-drop, .nojekyll). Os 20 produtos reais estão embutidos em frontend/src/data/productsFallback.js e são usados quando a API falha (GitHub Pages não tem backend)
+- App.js: HashRouter quando PUBLIC_URL existe (build Pages), BrowserRouter no Emergent
+- No GitHub Pages a loja abre completa e idêntica (hero, drops, catálogo, pagamento, contatos) com links de afiliado funcionando; painel admin e contador de cliques NÃO funcionam lá (sem backend)
+- Para publicar: Save to GitHub → repo Settings → Pages → Source: main branch /docs folder
+- Verificado: build servido localmente em /the-cat-drop/ renderiza 20 cards, links s.shopee.com.br, Pix; preview Emergent intacto com 20 produtos da API
+
 ## Backlog
 ### P0
 - Deploy: os dados do preview (20 produtos reais) serão copiados no primeiro deploy; edições posteriores no preview ficam só no preview

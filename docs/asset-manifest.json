@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/the-cat-drop/static/css/main.cc2ba0c3.css",
+    "main.js": "/the-cat-drop/static/js/main.d41ac4f5.js",
+    "index.html": "/the-cat-drop/index.html",
+    "main.cc2ba0c3.css.map": "/the-cat-drop/static/css/main.cc2ba0c3.css.map",
+    "main.d41ac4f5.js.map": "/the-cat-drop/static/js/main.d41ac4f5.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.cc2ba0c3.css",
+    "static/js/main.d41ac4f5.js"
+  ]
+}
