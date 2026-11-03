@@ -1,19 +1,26 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Cat, LogOut, Plus, Pencil, Trash2, X, ArrowLeft, Star, MousePointerClick, Trophy } from "lucide-react";
 import { toast } from "sonner";
 import { api } from "../lib/api";
 
+// REMINDER: DO NOT HARDCODE THE URL, OR ADD ANY FALLBACKS OR REDIRECT URLS, THIS BREAKS THE AUTH
+const loginWithGoogle = () => {
+  const redirectUrl = window.location.origin + "/admin";
+  window.location.href = `https://auth.emergentagent.com/?redirect=${encodeURIComponent(redirectUrl)}`;
+};
+
 const emptyForm = {
   name: "", category: "Tech & Gadgets", price: "", original_price: "",
-  image_url: "", affiliate_link: "", featured: false, mascot_quote: "", coupon: "",
+  image_url: "", affiliate_link: "", featured: false, mascot_quote: "", coupon: null,
 };
 
 const brl = (v) => Number(v).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 
 export default function Admin() {
-  const [user, setUser] = useState(null);
-  const [checking, setChecking] = useState(true);
+  const location = useLocation();
+  const [user, setUser] = useState(location.state?.user || null);
+  const [checking, setChecking] = useState(!location.state?.user);
   const [loginForm, setLoginForm] = useState({ email: "", password: "" });
   const [products, setProducts] = useState([]);
   const [form, setForm] = useState(emptyForm);
@@ -26,6 +33,7 @@ export default function Admin() {
   const loadProducts = () => api.get("/products").then((res) => setProducts(res.data)).catch(() => {});
 
   useEffect(() => {
+    if (location.state?.user) { loadProducts(); return; }
     api.get("/auth/me")
       .then((res) => { setUser(res.data); loadProducts(); })
       .catch(() => setUser(null))
@@ -56,7 +64,8 @@ export default function Admin() {
       ...form,
       price: parseFloat(String(form.price).replace(",", ".")),
       original_price: parseFloat(String(form.original_price).replace(",", ".")),
-      coupon: form.coupon || null,
+      coupon: null,
+      image_url: form.image_url || "https://images.unsplash.com/photo-1605170876472-db58e15c430e?crop=entropy&cs=srgb&fm=jpg&q=85",
     };
     try {
       if (editingId) {
@@ -76,7 +85,7 @@ export default function Admin() {
   };
 
   const startEdit = (p) => {
-    setForm({ ...p, price: String(p.price), original_price: String(p.original_price), coupon: p.coupon || "" });
+    setForm({ ...p, price: String(p.price), original_price: String(p.original_price), coupon: null });
     setEditingId(p.id);
     setShowForm(true);
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -110,6 +119,16 @@ export default function Admin() {
             <span className="font-display font-extrabold text-lg">THE CAT <span className="text-[#FFB800]">DROP</span></span>
           </div>
           <p className="text-sm text-zinc-500 mb-7">Área restrita do lojista.</p>
+          <button onClick={loginWithGoogle} data-testid="google-login-btn"
+            className="w-full flex items-center justify-center gap-3 rounded-full bg-white hover:bg-zinc-200 text-zinc-900 font-bold text-sm py-3 transition-colors mb-5">
+            <svg className="w-4 h-4" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.27-4.74 3.27-8.1z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.1c-.22-.66-.35-1.36-.35-2.1s.13-1.44.35-2.1V7.06H2.18A11 11 0 0 0 1 12c0 1.77.43 3.45 1.18 4.94l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/></svg>
+            Entrar com Google
+          </button>
+          <div className="flex items-center gap-3 mb-5">
+            <span className="flex-1 h-px bg-white/10" />
+            <span className="text-[10px] font-jetbrains uppercase tracking-widest text-zinc-600">ou com senha</span>
+            <span className="flex-1 h-px bg-white/10" />
+          </div>
           <form onSubmit={doLogin} className="space-y-4">
             <input type="email" required placeholder="E-mail" value={loginForm.email}
               onChange={(e) => setLoginForm({ ...loginForm, email: e.target.value })}
@@ -209,14 +228,10 @@ export default function Admin() {
               onChange={(e) => setForm({ ...form, price: e.target.value })} data-testid="product-price-input" className={inputCls} />
             <input required placeholder="Preço original (ex: 299.00)" value={form.original_price}
               onChange={(e) => setForm({ ...form, original_price: e.target.value })} data-testid="product-original-price-input" className={inputCls} />
-            <input required placeholder="URL da imagem (botão direito na foto do produto na Shopee → copiar endereço da imagem)" value={form.image_url}
-              onChange={(e) => setForm({ ...form, image_url: e.target.value })} data-testid="product-image-input" className={inputCls} />
             <input required placeholder="Link de afiliado Shopee" value={form.affiliate_link}
               onChange={(e) => setForm({ ...form, affiliate_link: e.target.value })} data-testid="product-affiliate-input" className={inputCls} />
             <input placeholder="Frase do Gato (opcional)" value={form.mascot_quote}
               onChange={(e) => setForm({ ...form, mascot_quote: e.target.value })} data-testid="product-quote-input" className={inputCls} />
-            <input placeholder="Cupom (opcional, ex: GATO10)" value={form.coupon}
-              onChange={(e) => setForm({ ...form, coupon: e.target.value })} data-testid="product-coupon-input" className={inputCls} />
             <label className="sm:col-span-2 flex items-center gap-2.5 text-sm text-zinc-300 cursor-pointer">
               <input type="checkbox" checked={form.featured}
                 onChange={(e) => setForm({ ...form, featured: e.target.checked })} data-testid="product-featured-checkbox"
@@ -234,7 +249,9 @@ export default function Admin() {
           {products.map((p) => (
             <div key={p.id} data-testid={`admin-product-row-${p.id}`}
               className="flex items-center gap-4 rounded-2xl bg-[#12141A] border border-white/10 p-4">
-              <img src={p.image_url} alt={p.name} className="w-14 h-14 rounded-xl object-cover shrink-0" />
+              <span className="w-10 h-10 rounded-xl bg-[#FF6B00]/15 flex items-center justify-center shrink-0">
+                <Cat className="w-5 h-5 text-[#FF6B00]" />
+              </span>
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-bold truncate">{p.name}</p>
                 <p className="text-xs text-zinc-500">

@@ -62,6 +62,19 @@ Site de afiliados da Shopee chamado **The Cat Drop**, com um gato preto ("O Gato
 - Tentativa de scraping das fotos oficiais da Shopee: BLOQUEADA (login/captcha nas APIs e páginas). Solução: placeholder do campo imagem no admin orienta a colar a URL da foto oficial (botão direito na foto na Shopee → copiar endereço da imagem)
 - Verificado: clique real no card abriu a página de afiliado na Shopee e incrementou o contador; painel exibe totais e ranking
 
+## Implementado (03/11/2026 — atualização 4)
+- REMOVIDO o card de cupom relâmpago das Ofertas do Dia e o campo cupom do admin/banco (coupon=null em todos os produtos)
+- REMOVIDAS as fotos dos produtos: cards do catálogo e Ofertas do Dia agora são só texto (nome, categoria, preço, desconto, frase do gato, botão Shopee)
+- Admin sem campo de imagem e sem campo cupom; image_url preenchida com fallback interno (não exibida)
+- Verificado: 0 imagens em drops+catálogo, sem card de cupom, form admin limpo, layout 375/1366 OK
+
+## Implementado (03/11/2026 — atualização 5)
+- Emergent managed Google Sign-In: botão "Entrar com Google" na tela de login do /admin, fluxo auth.emergentagent.com → #session_id → AuthCallback (useLocation().hash) → POST /api/auth/google
+- Backend: user_id custom (uuid), _id excluído, sessões em db.user_sessions (7 dias), cookie httpOnly session_token; get_current_user aceita session_token OU JWT legado
+- Role: admin se e-mail Google == ADMIN_EMAIL, senão viewer
+- Login por senha continua funcionando em paralelo
+- Verificado: JWT login/me OK, sessão Google simulada retorna user, botão renderiza, logout limpa sessão
+
 ## Backlog
 ### P0
 - Deploy: os dados do preview (20 produtos reais) serão copiados no primeiro deploy; edições posteriores no preview ficam só no preview

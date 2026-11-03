@@ -6,10 +6,12 @@ load_dotenv(ROOT_DIR / '.env')
 
 import os
 import logging
+import uuid
 from datetime import datetime, timezone, timedelta
 from typing import List, Optional, Annotated
 
 import bcrypt
+import httpx
 import jwt
 from bson import ObjectId
 from fastapi import FastAPI, APIRouter, HTTPException, Request, Response, Depends
@@ -127,6 +129,27 @@ async def root():
 
 
 async def get_current_user(request: Request) -> dict:
+    session_token = request.cookies.get("session_token")
+    if not session_token:
+        auth_header = request.headers.get("Authorization", "")
+        if auth_header.startswith("Bearer "):
+            session_token = auth_header[7:]
+    if session_token:
+        session_doc = await db.user_sessions.find_one({"session_token": session_token}, {"_id": 0})
+        if session_doc:
+            expires_at = session_doc["expires_at"]
+            if isinstance(expires_at, str):
+                expires_at = datetime.fromisoformat(expires_at)
+            if expires_at.tzinfo is None:
+                expires_at = expires_at.replace(tzinfo=timezone.utc)
+            if expires_at < datetime.now(timezone.utc):
+                raise HTTPException(status_code=401, detail="Session expired")
+            user = await db.users.find_one({"user_id": session_doc["user_id"]}, {"_id": 0})
+            if user:
+                user.pop("password_hash", None)
+                return user
+        raise HTTPException(status_code=401, detail="Not authenticated")
+
     token = request.cookies.get("access_token")
     if not token:
         auth_header = request.headers.get("Authorization", "")
@@ -175,7 +198,11 @@ async def login(input: LoginInput, request: Request, response: Response):
 
 
 @api_router.post("/auth/logout")
-async def logout(response: Response):
+async def logout(request: Request, response: Response):
+    session_token = request.cookies.get("session_token")
+    if session_token:
+        await db.user_sessions.delete_many({"session_token": session_token})
+    response.delete_cookie("session_token", path="/")
     response.delete_cookie("access_token", path="/")
     response.delete_cookie("refresh_token", path="/")
     return {"message": "logged out"}
@@ -183,7 +210,70 @@ async def logout(response: Response):
 
 @api_router.get("/auth/me")
 async def me(user: dict = Depends(get_current_user)):
-    return {"id": user["_id"], "email": user["email"], "name": user.get("name", "Admin"), "role": user.get("role", "admin")}
+    return {
+        "id": user.get("user_id") or user.get("_id"),
+        "email": user["email"],
+        "name": user.get("name", "Admin"),
+        "role": user.get("role", "admin"),
+        "picture": user.get("picture"),
+    }
+
+
+@api_router.post("/auth/google")
+async def google_session(request: Request, response: Response):
+    body = await request.json()
+    session_id = body.get("session_id")
+    if not session_id:
+        raise HTTPException(status_code=400, detail="session_id is required")
+
+    async with httpx.AsyncClient() as client_http:
+        resp = await client_http.get(
+            "https://demobackend.emergentagent.com/auth/v1/env/oauth/session-data",
+            headers={"X-Session-ID": session_id},
+        )
+    if resp.status_code != 200:
+        raise HTTPException(status_code=401, detail="Invalid session_id")
+
+    data = resp.json()
+    email = data["email"].lower().strip()
+
+    admin_email = os.environ.get("ADMIN_EMAIL", "admin@example.com")
+    role = "admin" if email == admin_email else "viewer"
+
+    existing = await db.users.find_one({"email": email}, {"_id": 0})
+    if existing:
+        user_id = existing.get("user_id") or f"user_{uuid.uuid4().hex[:12]}"
+        await db.users.update_one(
+            {"email": email},
+            {"$set": {"user_id": user_id, "name": data.get("name", "Admin"), "picture": data.get("picture"), "role": role}},
+        )
+    else:
+        user_id = f"user_{uuid.uuid4().hex[:12]}"
+        await db.users.insert_one({
+            "user_id": user_id,
+            "email": email,
+            "name": data.get("name", "Admin"),
+            "picture": data.get("picture"),
+            "role": role,
+            "password_hash": "",
+            "created_at": datetime.now(timezone.utc).isoformat(),
+        })
+
+    session_token = data["session_token"]
+    expires_at = datetime.now(timezone.utc) + timedelta(days=7)
+    await db.user_sessions.delete_many({"user_id": user_id})
+    await db.user_sessions.insert_one({
+        "user_id": user_id,
+        "session_token": session_token,
+        "expires_at": expires_at.isoformat(),
+        "created_at": datetime.now(timezone.utc).isoformat(),
+    })
+
+    response.set_cookie(
+        key="session_token", value=session_token,
+        httponly=True, secure=True, samesite="none", max_age=604800, path="/",
+    )
+    return {"id": user_id, "email": email, "name": data.get("name", "Admin"), "role": role, "picture": data.get("picture")}
 
 
 @api_router.post("/auth/refresh")
@@ -302,6 +392,7 @@ async def seed_products():
 async def startup():
     await db.users.create_index("email", unique=True)
     await db.login_attempts.create_index("identifier")
+    await db.user_sessions.create_index("session_token", unique=True)
     await db.products.update_many({"clicks": {"$exists": False}}, {"$set": {"clicks": 0}})
     await seed_admin()
     await seed_products()
