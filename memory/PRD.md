@@ -78,6 +78,7 @@ Site de afiliados da Shopee chamado **The Cat Drop**, com um gato preto ("O Gato
 ## Backlog
 ### P0
 - Deploy: os dados do preview (20 produtos reais) serão copiados no primeiro deploy; edições posteriores no preview ficam só no preview
+- GitHub Pages NÃO funciona para este app: precisa de backend FastAPI + MongoDB. Se o usuário insistir em GitHub Pages, seria necessário gerar build estático com homepage "/the-cat-drop/" e backend externo — mas produtos/admin/cliques não funcionariam sem backend
 
 ### P1
 - Newsletter/WhatsApp real (hoje o rodapé tem links de contato direto)
