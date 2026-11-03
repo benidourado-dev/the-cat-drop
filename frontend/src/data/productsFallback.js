@@ -1,11 +1,10 @@
-export const FALLBACK_PRODUCTS = [
-  {
+{
     "id": "6ae8b05a4ec6fb28ca06dd87",
     "name": "Inova Bateria Portátil Power Bank 20.000mah/10.000mah Universal carregador 22,5W",
     "category": "Tech & Gadgets",
     "price": 119.9,
     "original_price": 215.82,
-    "image_url": "",
+    "image_url": "https://p16-dreamina-sign-sg.ibyteimg.com/tos-alisg-i-wopfjsm1ax-sg/b5e8924e39514c6f988efc8b60123e71~tplv-wopfjsm1ax-resize:0:0.image?lk3s=eefa0b0c&x-expires=1825250595&x-signature=pYw9vL7i9PtuN7vGo3AQZeKpvhg%3D",
     "affiliate_link": "https://s.shopee.com.br/6fiXtyZKFV",
     "featured": true,
     "mascot_quote": "Kit original lacrado. Seu iPhone merece.",
@@ -19,7 +18,7 @@ export const FALLBACK_PRODUCTS = [
     "category": "Fitness & Suplementos",
     "price": 99.9,
     "original_price": 179.82,
-    "image_url": "",
+    "image_url": "https://p16-dreamina-sign-sg.ibyteimg.com/tos-alisg-i-wopfjsm1ax-sg/4a88c02b8f094cdb939d4d323a94e4c2~tplv-wopfjsm1ax-resize:0:0.image?lk3s=eefa0b0c&x-expires=1825251004&x-signature=kYLJGEevnLjrtq2wSg094vXluJk%3D",
     "affiliate_link": "https://s.shopee.com.br/6VP7hfZxaQ",
     "featured": true,
     "mascot_quote": "Força de verdade sem pagar caro. O Gato treina e aprova.",
@@ -33,7 +32,7 @@ export const FALLBACK_PRODUCTS = [
     "category": "Fitness & Suplementos",
     "price": 39.9,
     "original_price": 71.82,
-    "image_url": "",
+    "image_url": "https://p16-dreamina-sign-sg.ibyteimg.com/tos-alisg-i-wopfjsm1ax-sg/e6609c848ba7402ca0b1b2632f691d48~tplv-wopfjsm1ax-resize:0:0.image?lk3s=eefa0b0c&x-expires=1825251004&x-signature=U02iuY%2Fou0umOTMNYEXbQKp6ByY%3D",
     "affiliate_link": "https://s.shopee.com.br/9APssZPoAg",
     "featured": true,
     "mascot_quote": "Força de verdade sem pagar caro. O Gato treina e aprova.",
@@ -47,7 +46,7 @@ export const FALLBACK_PRODUCTS = [
     "category": "Moda & Estilo",
     "price": 27.99,
     "original_price": 50.38,
-    "image_url": "",
+    "image_url": "https://p16-dreamina-sign-sg.ibyteimg.com/tos-alisg-i-wopfjsm1ax-sg/bb835afcc1e1488fa55ad950aeafc4fd~tplv-wopfjsm1ax-resize:0:0.image?lk3s=eefa0b0c&x-expires=1825251004&x-signature=yGPUmWfOGg%2FccqNeZaruXgZWLUY%3D",
     "affiliate_link": "https://s.shopee.com.br/6q1y6HYguW",
     "featured": false,
     "mascot_quote": "Básica que veste bem em qualquer ocasião.",
@@ -61,7 +60,7 @@ export const FALLBACK_PRODUCTS = [
     "category": "Casa & Cozinha",
     "price": 34.98,
     "original_price": 62.96,
-    "image_url": "",
+    "image_url": "https://p16-dreamina-sign-sg.ibyteimg.com/tos-alisg-i-wopfjsm1ax-sg/8a2d2be4eb104f759a17bfd835b6204c~tplv-wopfjsm1ax-resize:0:0.image?lk3s=eefa0b0c&x-expires=1825251004&x-signature=2iNEkqy%2BJJAJX7uz%2B6LEVGUFcdY%3D",
     "affiliate_link": "https://s.shopee.com.br/6L5hVMaavP",
     "featured": false,
     "mascot_quote": "Água gelada o dia todo, estilo o ano todo.",
@@ -278,5 +277,3 @@ export const FALLBACK_PRODUCTS = [
     "coupon": null,
     "clicks": 0,
     "created_at": "2026-11-02T15:46:34.571782Z"
-  }
-];
