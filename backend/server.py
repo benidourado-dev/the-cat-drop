@@ -13,6 +13,7 @@ from typing import List, Optional, Annotated
 import bcrypt
 import httpx
 import jwt
+import stripe
 from bson import ObjectId
 from fastapi import FastAPI, APIRouter, HTTPException, Request, Response, Depends
 from motor.motor_asyncio import AsyncIOMotorClient
@@ -246,6 +247,7 @@ async def google_session(request: Request, response: Response):
         user_id = existing.get("user_id") or f"user_{uuid.uuid4().hex[:12]}"
         await db.users.update_one(
             {"email": email},
+
             {"$set": {"user_id": user_id, "name": data.get("name", "Admin"), "picture": data.get("picture"), "role": role}},
         )
     else:
@@ -340,8 +342,96 @@ async def delete_product(product_id: str, user: dict = Depends(get_current_user)
     return {"message": "deleted"}
 
 
-SEED_PRODUCTS = [
-    {"name": "Headphone Sem Fio Bluetooth Noise Cancelling", "category": "Tech & Gadgets", "price": 129.90, "original_price": 299.00,
+
+stripe.api_key = os.environ.get("STRIPE_SECRET_KEY") or "sk_test_emergent"
+STRIPE_WEBHOOK_SECRET = os.environ.get("STRIPE_WEBHOOK_SECRET", "")
+
+# Stripe Tax e Managed Payments não são suportados em contas BR — modo "diy" (só processamento)
+TAX_MODE = "diy"
+
+
+class CheckoutRequest(BaseModel):
+    lookup_key: str
+    quantity: int = Field(1, ge=1, le=100)
+    origin_url: str
+    user_id: Optional[str] = None
+
+
+@api_router.post("/payments/checkout")
+async def create_checkout(req: CheckoutRequest):
+    prices = stripe.Price.list(lookup_keys=[req.lookup_key], active=True, limit=1).data
+    if not prices:
+        raise HTTPException(status_code=500, detail=f"Price not found: {req.lookup_key}")
+    price = prices[0]
+    session = stripe.checkout.Session.create(
+        line_items=[{"price": price.id, "quantity": req.quantity}],
+        mode="subscription" if price.recurring else "payment",
+        success_url=f"{req.origin_url}/payment/success?session_id={{CHECKOUT_SESSION_ID}}",
+        cancel_url=f"{req.origin_url}/payment/cancel",
+        metadata={"user_id": req.user_id or "", "lookup_key": req.lookup_key},
+    )
+    await db.payment_transactions.insert_one({
+        "session_id": session.id, "user_id": req.user_id, "lookup_key": req.lookup_key,
+        "amount": (price.unit_amount or 0) * req.quantity, "currency": price.currency,
+        "status": "initiated", "payment_status": "pending",
+        "created_at": datetime.now(timezone.utc).isoformat(), "updated_at": datetime.now(timezone.utc).isoformat(),
+    })
+    return {"checkout_url": session.url, "session_id": session.id}
+
+
+@api_router.get("/payments/status/{session_id}")
+async def get_payment_status(session_id: str):
+    record = await db.payment_transactions.find_one({"session_id": session_id})
+    if not record:
+        raise HTTPException(status_code=404, detail="Transaction not found")
+    if record.get("payment_status") != "paid":
+        try:
+            s = stripe.checkout.Session.retrieve(session_id)
+            if s.payment_status == "paid" or s.status == "complete":
+                await db.payment_transactions.update_one(
+                    {"session_id": session_id, "payment_status": {"$ne": "paid"}},
+                    {"$set": {"status": "completed", "payment_status": "paid",
+                              "stripe_payment_intent_id": s.payment_intent,
+                              "updated_at": datetime.now(timezone.utc).isoformat()}},
+                )
+                record = await db.payment_transactions.find_one({"session_id": session_id})
+        except stripe.error.StripeError:
+            pass
+    return {"session_id": record["session_id"], "status": record["status"], "payment_status": record["payment_status"]}
+
+
+@api_router.post("/stripe/webhook")
+async def stripe_webhook(request: Request):
+    payload = await request.body()
+    sig = request.headers.get("stripe-signature", "")
+    try:
+        event = stripe.Webhook.construct_event(payload, sig, STRIPE_WEBHOOK_SECRET)
+    except stripe.error.SignatureVerificationError:
+        raise HTTPException(status_code=400, detail="Invalid signature")
+    obj, t = event["data"]["object"], event["type"]
+    if t == "checkout.session.completed":
+        await db.payment_transactions.update_one(
+            {"session_id": obj["id"], "payment_status": {"$ne": "paid"}},
+            {"$set": {"status": "completed", "payment_status": obj.get("payment_status", "paid"),
+                      "stripe_payment_intent_id": obj.get("payment_intent"),
+                      "updated_at": datetime.now(timezone.utc).isoformat()}},
+        )
+    elif t == "checkout.session.async_payment_succeeded":
+        await db.payment_transactions.update_one({"session_id": obj["id"]},
+            {"$set": {"payment_status": "paid", "updated_at": datetime.now(timezone.utc).isoformat()}})
+    elif t == "checkout.session.async_payment_failed":
+        await db.payment_transactions.update_one({"session_id": obj["id"]},
+            {"$set": {"status": "failed", "payment_status": "failed", "updated_at": datetime.now(timezone.utc).isoformat()}})
+    elif t == "checkout.session.expired":
+        await db.payment_transactions.update_one({"session_id": obj["id"]},
+            {"$set": {"status": "expired", "payment_status": "expired", "updated_at": datetime.now(timezone.utc).isoformat()}})
+    elif t == "charge.refunded":
+        await db.payment_transactions.update_one({"stripe_payment_intent_id": obj.get("payment_intent")},
+            {"$set": {"status": "refunded", "payment_status": "refunded", "updated_at": datetime.now(timezone.utc).isoformat()}})
+    return {"status": "ok"}
+
+
+SEED_PRODUCTS = [    {"name": "Headphone Sem Fio Bluetooth Noise Cancelling", "category": "Tech & Gadgets", "price": 129.90, "original_price": 299.00,
      "image_url": "https://images.unsplash.com/photo-1605170876472-db58e15c430e?crop=entropy&cs=srgb&fm=jpg&q=85",
      "affiliate_link": "https://shopee.com.br", "featured": True,
      "mascot_quote": "Som de estúdio por preço de fone de camelô. O Gato aprovou.", "coupon": "GATO10"},

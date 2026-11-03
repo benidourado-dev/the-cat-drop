@@ -5,6 +5,7 @@ import { Marquee } from "../components/Marquee";
 import { FeaturedDrops } from "../components/FeaturedDrops";
 import { Catalog } from "../components/Catalog";
 import { PaymentSection } from "../components/PaymentSection";
+import { SupportSection } from "../components/SupportSection";
 import { MascotSection } from "../components/MascotSection";
 import { Footer } from "../components/Footer";
 import { api } from "../lib/api";
@@ -38,6 +39,7 @@ export default function Home() {
           </>
         )}
         <PaymentSection />
+        <SupportSection />
         <MascotSection />
       </main>
       <Footer />

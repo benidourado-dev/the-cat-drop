@@ -4,6 +4,8 @@ import { Toaster } from "sonner";
 import Home from "./pages/Home";
 import Admin from "./pages/Admin";
 import AuthCallback from "./pages/AuthCallback";
+import PaymentSuccess from "./pages/PaymentSuccess";
+import PaymentCancel from "./pages/PaymentCancel";
 
 const Router = process.env.PUBLIC_URL ? HashRouter : BrowserRouter;
 
@@ -16,6 +18,8 @@ function AppRouter() {
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/admin" element={<Admin />} />
+      <Route path="/payment/success" element={<PaymentSuccess />} />
+      <Route path="/payment/cancel" element={<PaymentCancel />} />
     </Routes>
   );
 }
